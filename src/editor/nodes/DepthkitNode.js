@@ -20,7 +20,7 @@ export default class DepthkitNode extends EditorNodeMixin(Object3D) {
 
     const { src } = json.components.find(c => c.name === "depthkit-player").props;
 
-    node.href = src;
+    node.src = src;
 
     return node;
   }
@@ -28,7 +28,7 @@ export default class DepthkitNode extends EditorNodeMixin(Object3D) {
   constructor(editor) {
     super(editor);
 
-    this.href = "";
+    this.src = "";
 
     const geometry = new PlaneBufferGeometry();
     const material = new MeshBasicMaterial();
@@ -55,7 +55,7 @@ export default class DepthkitNode extends EditorNodeMixin(Object3D) {
       }
     }
 
-    this.href = source.href;
+    this.src = source.src;
 
     return this;
   }
@@ -63,7 +63,7 @@ export default class DepthkitNode extends EditorNodeMixin(Object3D) {
   serialize() {
     return super.serialize({
       "depthkit-player": {
-        src: this.href
+        src: this.src
       }
     });
   }
@@ -71,7 +71,7 @@ export default class DepthkitNode extends EditorNodeMixin(Object3D) {
   prepareForExport() {
     super.prepareForExport();
     this.addGLTFComponent("depthkit-player", {
-      src: this.href
+      src: this.src
     });
     this.replaceObject();
   }

@@ -15,8 +15,8 @@ export default class DepthkitNodeEditor extends Component {
 
   static description = "Depthkit Player url";
 
-  onChangeHref = href => {
-    this.props.editor.setPropertySelected("href", href);
+  onChangeSrc = src => {
+    this.props.editor.setPropertySelected("src", src);
   };
 
   render() {
@@ -25,7 +25,7 @@ export default class DepthkitNodeEditor extends Component {
     return (
       <NodeEditor description={DepthkitNodeEditor.description} {...this.props}>
         <InputGroup name="Url">
-          <StringInput value={node.href} onChange={this.onChangeHref} />
+          <StringInput value={node.src} onChange={this.onChangeSrc} />
         </InputGroup>
       </NodeEditor>
     );
