@@ -1,3 +1,5 @@
+global.THREE = require("three");
+
 import React, { Component, Suspense, lazy } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import PropTypes from "prop-types";
