@@ -55,6 +55,9 @@ import MediaFrameNodeEditor from "./ui/properties/MediaFrameNodeEditor";
 import DepthkitNode from "./editor/nodes/DepthkitNode";
 import DepthkitNodeEditor from "./ui/properties/DepthkitNodeEditor";
 
+import DepthkitStreamNode from "./editor/nodes/DepthkitStreamNode";
+import DepthkitStreamNodeEditor from "./ui/properties/DepthkitStreamNodeEditor";
+
 import SketchfabSource from "./ui/assets/sources/SketchfabSource";
 import PolySource from "./ui/assets/sources/PolySource";
 import BingImagesSource from "./ui/assets/sources/BingImagesSource";
@@ -96,6 +99,7 @@ export function createEditor(api, settings) {
   editor.registerNode(MediaFrameNode, MediaFrameNodeEditor);
 
   editor.registerNode(DepthkitNode, DepthkitNodeEditor);
+  editor.registerNode(DepthkitStreamNode, DepthkitStreamNodeEditor);
 
   editor.registerSource(new ElementsSource(editor));
   editor.registerSource(new MyAssetsSource(editor));
