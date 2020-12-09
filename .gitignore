@@ -22,3 +22,5 @@ results/
 test/reports/*.xml
 
 .ret.credentials
+
+package-lock.json
