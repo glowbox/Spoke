@@ -55,8 +55,8 @@ import MediaFrameNodeEditor from "./ui/properties/MediaFrameNodeEditor";
 import DepthkitNode from "./editor/nodes/DepthkitNode";
 import DepthkitNodeEditor from "./ui/properties/DepthkitNodeEditor";
 
-import DepthkitStreamNode from "./editor/nodes/DepthkitStreamNode";
-import DepthkitStreamNodeEditor from "./ui/properties/DepthkitStreamNodeEditor";
+import VPTStreamNode from "./editor/nodes/VPTStreamNode";
+import VPTStreamStreamNodeEditor from "./ui/properties/VPTStreamNodeEditor";
 
 import SketchfabSource from "./ui/assets/sources/SketchfabSource";
 import PolySource from "./ui/assets/sources/PolySource";
@@ -99,7 +99,7 @@ export function createEditor(api, settings) {
   editor.registerNode(MediaFrameNode, MediaFrameNodeEditor);
 
   editor.registerNode(DepthkitNode, DepthkitNodeEditor);
-  editor.registerNode(DepthkitStreamNode, DepthkitStreamNodeEditor);
+  editor.registerNode(VPTStreamNode, VPTStreamStreamNodeEditor);
 
   editor.registerSource(new ElementsSource(editor));
   editor.registerSource(new MyAssetsSource(editor));

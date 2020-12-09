@@ -1,0 +1,14 @@
+{	
+	"depthFocalLength" : {
+		"x" : 639.294,
+		"y" : 639.294
+	},
+	"depthImageSize" : {
+		"x" : 640,
+		"y" : 480
+	},
+	"depthPrincipalPoint" : {
+		"x" : 331.706,
+		"y" : 236.211
+	}	 
+}
