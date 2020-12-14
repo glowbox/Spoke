@@ -5,7 +5,9 @@ import EditorNodeMixin from "./EditorNodeMixin";
 import { Object3D, PlaneBufferGeometry, MeshBasicMaterial, Mesh, DoubleSide } from "three";
 import spokeLogoSrc from "../../assets/spoke-icon.png";
 import realsense415 from "../../assets/vpt/realsense415_480.json";
-
+import { buildAbsoluteURL } from "url-toolkit";
+import { proxiedUrlFor } from "../../api/Api";
+import configs from '../../configs'
 import loadTexture from "../utils/loadTexture";
 
 import "depthkit";
@@ -44,7 +46,7 @@ export default class VPTStreamNode extends EditorNodeMixin(Object3D) {
     this._meta = realsense415;
 
     this.vptstream = new VPTStream();
-
+    this.vptstream.hls_xhroverride = this.proxyHLS;
     document.body.appendChild(this.vptstream.video);
 
     this.vptstream.addEventListener(STREAMEVENTS.PLAY_SUCCESS, function (event) {
@@ -57,6 +59,19 @@ export default class VPTStreamNode extends EditorNodeMixin(Object3D) {
 
     this.add(this.vptstream);
 
+  }
+
+  proxyHLS(xhr, u) {
+    const corsProxyPrefix = `https://${configs.CORS_PROXY_SERVER}/`;
+    if (u.startsWith(corsProxyPrefix)) {
+      u = u.substring(corsProxyPrefix.length);
+    }
+    // HACK HLS.js resolves relative urls internally, but our CORS proxying screws it up. Resolve relative to the original unproxied url.
+    // TODO extend HLS.js to allow overriding of its internal resolving instead
+    if (!u.startsWith("http")) {
+      u = buildAbsoluteURL(baseUrl, u.startsWith("/") ? u : `/${u}`);
+    }
+    xhr.open("GET", proxiedUrlFor(u));
   }
 
   get src() {
@@ -120,8 +135,12 @@ export default class VPTStreamNode extends EditorNodeMixin(Object3D) {
       }
     }
 
+    const proxySrc = proxiedUrlFor(url);
+
+    console.log("load " + proxySrc)
+
     const params = {
-      videoPath: url,
+      videoPath: proxySrc,
       meta: this._meta,
       renderMode: 'perspective',
     }
