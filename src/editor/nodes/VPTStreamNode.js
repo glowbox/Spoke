@@ -46,6 +46,7 @@ export default class VPTStreamNode extends EditorNodeMixin(Object3D) {
     this._meta = realsense415;
 
     this.vptstream = new VPTStream();
+    this.vptstream.nodeName = "IgnoreForExport";
     this.vptstream.hls_xhroverride = this.proxyHLS;
     document.body.appendChild(this.vptstream.video);
 

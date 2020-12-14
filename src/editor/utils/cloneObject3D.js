@@ -75,17 +75,26 @@ export default function cloneObject3D(source, preserveUUIDs) {
   source.traverse(sourceNode => {
     const clonedNode = cloneLookup.get(sourceNode);
 
+    //TODO: TW inserted this because it choked on the Points object in depthkit VPTStream
     if (!clonedNode) {
-      throw new Error(
-        `Couldn't find the cloned node for ${sourceNode.nodeName || sourceNode.type} "${sourceNode.name}"`
-      );
+      return;
     }
 
-    if (preserveUUIDs) {
-      clonedNode.uuid = sourceNode.uuid;
-    }
+    //TODO: what is a better way to mark certain elements as "spoke only"
+    //VPTStreamNode creates at least 2 levels of threejs objects that don't need to go into threejs
+    if (sourceNode.nodeName != "IgnoreForExport") {
+      if (!clonedNode) {
+        throw new Error(
+          `Couldn't find the cloned node for nodeName:${sourceNode.nodeName} type:${sourceNode.type} name:"${sourceNode.name}" parent:${sourceNode.parent.name}`
+        );
+      }
 
-    cloneUUIDLookup.set(sourceNode.uuid, clonedNode.uuid);
+      if (preserveUUIDs) {
+        clonedNode.uuid = sourceNode.uuid;
+      }
+
+      cloneUUIDLookup.set(sourceNode.uuid, clonedNode.uuid);
+    }
   });
 
   source.traverse(sourceNode => {

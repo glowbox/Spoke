@@ -40,6 +40,7 @@ export default class DepthkitNode extends EditorNodeMixin(Object3D) {
 
     this._src = "";
     this.player = new Depthkit();
+    this.player.nodeName = "IgnoreForExport";
 
     /*
     const geometry = new PlaneBufferGeometry();
