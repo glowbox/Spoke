@@ -4,6 +4,7 @@ import NodeEditor from "./NodeEditor";
 import InputGroup from "../inputs/InputGroup";
 import StringInput from "../inputs/StringInput";
 import CompoundNumericInput from "../inputs/CompoundNumericInput";
+import NumericInput from "../inputs/NumericInput";
 import Vector2Input from "../inputs/Vector2Input";
 import SelectInput from "../inputs/SelectInput";
 
@@ -46,16 +47,23 @@ export default class VPTStreamNodeEditor extends Component {
     this.props.editor.setPropertySelected("pointSize", pointSize);
   };
 
+  onChangeStartAt = startat => {
+    this.props.editor.setPropertySelected("startat", startat);
+  };
+
   onChangeThresholdX = thresholdX => {
     this.props.editor.setPropertySelected("thresholdX", thresholdX);
+    this.props.node.thresholdX = thresholdX;
   };
 
   onChangeThresholdY = thresholdY => {
     this.props.editor.setPropertySelected("thresholdY", thresholdY);
+    this.props.node.thresholdY = thresholdY;
   };
 
   onChangeThresholdZ = thresholdZ => {
     this.props.editor.setPropertySelected("thresholdZ", thresholdZ);
+    this.props.node.thresholdZ = thresholdZ;
   };
 
   render() {
@@ -78,16 +86,19 @@ export default class VPTStreamNodeEditor extends Component {
             max={20}
             step={0.1}
             value={node.pointSize}
-            onChange={this.onChangeStartOpacity}
+            onChange={this.onChangePointSize}
           />
+        </InputGroup>
+        <InputGroup name="Start Stream at" info="For recorded streams how many seconds in to start">
+          <NumericInput value={node.startat} onChange={this.onChangeStartAt} />
         </InputGroup>
         <InputGroup name="Threshold X (width)">
           <Vector2Input
             smallStep={0.01}
             mediumStep={0.1}
             largeStep={0.25}
-            min={0}
-            max={4}
+            min={-4.0}
+            max={4.0}
             value={node.thresholdX}
             onChange={this.onChangeThresholdX}
           />
@@ -97,8 +108,8 @@ export default class VPTStreamNodeEditor extends Component {
             smallStep={0.01}
             mediumStep={0.1}
             largeStep={0.25}
-            min={0}
-            max={4}
+            min={-4.0}
+            max={4.0}
             value={node.thresholdY}
             onChange={this.onChangeThresholdY}
           />
@@ -108,8 +119,8 @@ export default class VPTStreamNodeEditor extends Component {
             smallStep={0.01}
             mediumStep={0.1}
             largeStep={0.25}
-            min={0}
-            max={4}
+            min={0.0}
+            max={4.0}
             value={node.thresholdZ}
             onChange={this.onChangeThresholdZ}
           />

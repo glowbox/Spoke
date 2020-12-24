@@ -27,12 +27,26 @@ export default class VPTStreamNode extends EditorNodeMixin(Object3D) {
   static async deserialize(editor, json, loadAsync, onError) {
     const node = await super.deserialize(editor, json);
 
-    const { src } = json.components.find(c => c.name === "vpt-stream").props;
+    const { src, meta, sensor, renderMode, pointSize, startat, thresholdMin, thresholdMax } = json.components.find(c => c.name === "vpt-stream").props;
+
+    console.log(json.components.find(c => c.name === "vpt-stream").props);
 
     loadAsync(
       (async () => {
-        node.src = src;
-        //await node.load(src, onError);
+        node.params.src = src;
+        node.params.meta = meta == undefined ? node.params.meta : meta;
+        node.params.sensor = sensor == undefined ? node.params.sensor : sensor;
+        node.params.renderMode = renderMode == undefined ? node.params.renderMode : renderMode;
+        node.params.pointSize = pointSize == undefined ? node.params.pointSize : pointSize;
+        node.params.startat = startat == undefined ? node.params.startat : startat;
+        node.params.thresholdMin = thresholdMin == undefined ? node.params.thresholdMin : thresholdMin;
+        node.params.thresholdMax = thresholdMax == undefined ? node.params.thresholdMax : thresholdMax;
+
+        node._thresholdX = new Vector2(node.params.thresholdMin.x, node.params.thresholdMax.x);
+        node._thresholdY = new Vector2(node.params.thresholdMin.y, node.params.thresholdMax.y);
+        node._thresholdZ = new Vector2(node.params.thresholdMin.z, node.params.thresholdMax.z);
+
+        node.loadMedia().catch(console.error);
       })()
     );
 
@@ -52,10 +66,16 @@ export default class VPTStreamNode extends EditorNodeMixin(Object3D) {
       sensor: "realsenseD415",
       renderMode: "perspective",
       pointSize: 8.0,
-      thresholdX: { min: -2.0, max: 2.0 },
-      thresholdY: { min: -2.0, max: 2.0 },
-      thresholdZ: { min: 0.0, max: 4.0 },
+      startat: 0.0,
+      thresholdMin: { x: -2.0, y: -2.0, z: 0.0 },
+      thresholdMax: { x: 2.0, y: 2.0, z: 4.0 },
     }
+
+    this._thresholdX = new Vector2(this.params.thresholdMin.x, this.params.thresholdMax.x);
+    this._thresholdY = new Vector2(this.params.thresholdMin.y, this.params.thresholdMax.y);
+    this._thresholdZ = new Vector2(this.params.thresholdMin.z, this.params.thresholdMax.z);
+
+
 
     this.vptstream = new VPTStream();
     this.vptstream.nodeName = "IgnoreForExport";
@@ -98,7 +118,6 @@ export default class VPTStreamNode extends EditorNodeMixin(Object3D) {
     }
   }
 
-  //TODO: consider embedding the meta data json instead of a url to the data
   get meta() {
     return this.params.meta;
   }
@@ -119,6 +138,8 @@ export default class VPTStreamNode extends EditorNodeMixin(Object3D) {
       this.params.meta = realsense415;
     }
     this.params.sensor = value;
+
+    this.loadMedia().catch(console.error);
   }
 
   get renderMode() { return this.params.renderMode; }
@@ -135,46 +156,71 @@ export default class VPTStreamNode extends EditorNodeMixin(Object3D) {
   set pointSize(value) {
     if (!value) return;
     this.params.pointSize = value;
-    this.updateStream();
+    this.updateStream("pointSize", value);
   }
 
-  get thresholdX() { return new Vector2(this.params.thresholdX.min, this.params.thresholdX.max); }
+  get startat() { return this.params.startat; }
+
+  set startat(value) {
+    if (!value) return;
+    this.params.startat = value;
+    this.updateStream("startat", value);
+  }
+
+  get thresholdX() { return this._thresholdX; }
 
   set thresholdX(value) {
     if (!value) return;
 
-    this.params.thresholdX.min = value.x;
-    this.params.thresholdX.max = value.y;
-    this.updateStream();
+    this._thresholdX = value;
+
+    this.params.thresholdMin.x = this._thresholdX.x;
+    this.params.thresholdMax.x = this._thresholdX.y;
+
+    this.updateStream("thresholdMin", this.params.thresholdMin);
+    this.updateStream("thresholdMax", this.params.thresholdMax);
   }
 
-  get thresholdY() { return new Vector2(this.params.thresholdY.min, this.params.thresholdY.max); }
+  get thresholdY() { return this._thresholdY; }
 
   set thresholdY(value) {
     if (!value) return;
 
-    this.params.thresholdY.min = value.x;
-    this.params.thresholdY.max = value.y;
-    this.updateStream();
+    this._thresholdY = value;
+
+    this.params.thresholdMin.y = this._thresholdY.x;
+    this.params.thresholdMax.y = this._thresholdY.y;
+
+    this.updateStream("thresholdMin", this.params.thresholdMin);
+    this.updateStream("thresholdMax", this.params.thresholdMax);
   }
 
-  get thresholdZ() { return new Vector2(this.params.thresholdZ.min, this.params.thresholdZ.max); }
+  get thresholdZ() { return this._thresholdZ; }
 
   set thresholdZ(value) {
     if (!value) return;
 
-    this.params.thresholdZ.min = value.x;
-    this.params.thresholdZ.max = value.y;
-    this.updateStream();
+    this._thresholdZ = value;
+
+    this.params.thresholdMin.z = this._thresholdZ.x;
+    this.params.thresholdMax.z = this._thresholdZ.y;
+
+    this.updateStream("thresholdMin", this.params.thresholdMin);
+    this.updateStream("thresholdMax", this.params.thresholdMax);
   }
 
   onAdd() {
     console.log("vptstream onAdd " + this.params.src);
   }
 
+  onRemove() {
+    console.log("vptstream onRemove " + this.params.src);
+    this.vptstream.dispose();
+
+  }
+
   onChange() {
     //console.log("vptstream onChange " + this.params.src);
-    this.updateStream();
   }
 
   onSelect() { }
@@ -214,21 +260,20 @@ export default class VPTStreamNode extends EditorNodeMixin(Object3D) {
       meta: this.params.meta,
       renderMode: this.params.renderMode,
       pointSize: this.params.pointSize,
-      scale: this.scale.z
+      scale: this.scale.z,
+      startat: this.params.startat,
+      thresholdMin: this.params.thresholdMin,
+      thresholdMax: this.params.thresholdMax
     }
     this.vptstream.load(params);
+
   }
 
-  updateStream() {
+  updateStream(param, value) {
 
     if (this.vptstream) {
-
-      this.vptstream.updateParameter("pointSize", this.params.pointSize);
-
-      this.vptstream.updateParameter("scale", this.scale.z);
-
+      this.vptstream.updateParameter(param, value);
     }
-
   }
 
 
@@ -249,6 +294,12 @@ export default class VPTStreamNode extends EditorNodeMixin(Object3D) {
 
     this.params.src = source.src;
     this.params.meta = source.meta;
+    this.params.renderMode = source.renderMode;
+    this.params.pointSize = source.pointSize;
+    this.params.startat = source.startat;
+    this.params.thresholdMin = source.thresholdMin;
+    this.params.thresholdMax = source.thresholdMax;
+
     return this;
   }
 
@@ -259,7 +310,10 @@ export default class VPTStreamNode extends EditorNodeMixin(Object3D) {
         meta: this.params.meta,
         renderMode: this.params.renderMode,
         pointSize: this.params.pointSize,
-        scale: this.params.scale
+        scale: this.scale.z,
+        startat: this.params.startat,
+        thresholdMin: this.params.thresholdMin,
+        thresholdMax: this.params.thresholdMax
       }
     });
   }
@@ -271,7 +325,10 @@ export default class VPTStreamNode extends EditorNodeMixin(Object3D) {
       meta: this.params.meta,
       renderMode: this.params.renderMode,
       pointSize: this.params.pointSize,
-      scale: this.params.scale
+      scale: this.scale.z,
+      startat: this.params.startat,
+      thresholdMin: this.params.thresholdMin,
+      thresholdMax: this.params.thresholdMax
     });
     this.replaceObject();
   }
