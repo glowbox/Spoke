@@ -29,7 +29,7 @@ export default class VPTStreamNode extends EditorNodeMixin(Object3D) {
 
     const { src, meta, sensor, renderMode, pointSize, startat, thresholdMin, thresholdMax } = json.components.find(c => c.name === "vpt-stream").props;
 
-    console.log(json.components.find(c => c.name === "vpt-stream").props);
+    //console.log(json.components.find(c => c.name === "vpt-stream").props);
 
     loadAsync(
       (async () => {
@@ -166,6 +166,10 @@ export default class VPTStreamNode extends EditorNodeMixin(Object3D) {
     this.params.startat = value;
     this.updateStream("startat", value);
   }
+
+  get thresholdMin() { return this.params.thresholdMin; }
+
+  get thresholdMax() { return this.params.thresholdMax; }
 
   get thresholdX() { return this._thresholdX; }
 
