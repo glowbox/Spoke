@@ -5184,9 +5184,9 @@ depd@~1.1.2:
 
 "depthkit@github:volumetricperformance/Depthkit.js#master":
   version "1.0.0"
-  resolved "https://codeload.github.com/volumetricperformance/Depthkit.js/tar.gz/ae7ae9e4c17246b991df182425aa21cafe7d3274"
+  resolved "https://codeload.github.com/volumetricperformance/Depthkit.js/tar.gz/966dd0dd9e55967f7ffeae8bd3cb4a05119224ba"
   dependencies:
-    three "https://github.com/MozillaReality/three.js.git#0f9b0024725f0dd917caa54c2934a4ba1fc12c4f"
+    three "git+https://github.com/MozillaReality/three.js.git#0f9b0024725f0dd917caa54c2934a4ba1fc12c4f"
 
 des.js@^1.0.0:
   version "1.0.1"
@@ -13762,11 +13762,11 @@ three-mesh-bvh@^0.1.4:
 
 "three@git+https://github.com/MozillaReality/three.js.git#0f9b0024725f0dd917caa54c2934a4ba1fc12c4f":
   version "0.105.1"
-  uid "0f9b0024725f0dd917caa54c2934a4ba1fc12c4f"
   resolved "git+https://github.com/MozillaReality/three.js.git#0f9b0024725f0dd917caa54c2934a4ba1fc12c4f"
 
 "three@https://github.com/MozillaReality/three.js.git#0f9b0024725f0dd917caa54c2934a4ba1fc12c4f":
   version "0.105.1"
+  uid "0f9b0024725f0dd917caa54c2934a4ba1fc12c4f"
   resolved "https://github.com/MozillaReality/three.js.git#0f9b0024725f0dd917caa54c2934a4ba1fc12c4f"
 
 throttle-debounce@^2.1.0:
