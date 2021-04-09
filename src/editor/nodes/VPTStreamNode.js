@@ -10,8 +10,9 @@ import { proxiedUrlFor } from "../../api/Api";
 import configs from '../../configs'
 import loadTexture from "../utils/loadTexture";
 import { Vector2 } from "three";
-import { VPTStream } from "vpt-stream";
+
 import Hls from "hls.js/dist/hls.light";
+import VPTStream from "vpt-stream";
 
 //let linkHelperTexture = null;
 
@@ -81,11 +82,11 @@ export default class VPTStreamNode extends EditorNodeMixin(Object3D) {
     this.vptstream.nodeName = "IgnoreForExport";
     this.vptstream.hls_xhroverride = this.proxyHLS;
 
-    this.vptstream.addEventListener(STREAMEVENTS.PLAY_SUCCESS, function (event) {
+    this.vptstream.addEventListener(VPTStream.STREAMEVENTS.PLAY_SUCCESS, function (event) {
       console.log(`${event.type} ${event.message}`);
     });
 
-    this.vptstream.addEventListener(STREAMEVENTS.PLAY_ERROR, function (event) {
+    this.vptstream.addEventListener(VPTStream.STREAMEVENTS.PLAY_ERROR, function (event) {
       console.log(`${event.type} ${event.message}`);
     });
 
