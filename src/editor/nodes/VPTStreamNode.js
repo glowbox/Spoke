@@ -10,7 +10,7 @@ import { proxiedUrlFor } from "../../api/Api";
 import configs from '../../configs'
 import loadTexture from "../utils/loadTexture";
 import { Vector2 } from "three";
-import "depthkit";
+import { VPTStream } from "vpt-stream";
 import Hls from "hls.js/dist/hls.light";
 
 //let linkHelperTexture = null;
